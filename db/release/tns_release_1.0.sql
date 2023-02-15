@@ -122,7 +122,9 @@ CREATE TABLE [dbo].[project](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[name] [varchar](50) NOT NULL,
 	[description] [varchar](100) NOT NULL,
-	[technologyid] [int] NOT NULL,
+	[orgid] [int] NOT NULL,
+	[techstack] varchar(256),
+	[ishavingmodule] [tinyint] NOT NULL,
 	[createdby] [int] NOT NULL,
 	[creationdate] [datetime] NOT NULL,
 	[modifiedby] [int] NOT NULL,
@@ -165,7 +167,7 @@ CREATE TABLE [dbo].[sprint_email_audit](
 	[useremail] [varchar](100) NOT NULL,
 	[sprintid] [int] NOT NULL,
 	[htmlbody] [varchar](512) NOT NULL,
-	[sendby] [int] NULL,
+	[sendby] [varchar](100) NOT NULL,
 	[sentdate] [datetime] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
@@ -186,6 +188,7 @@ CREATE TABLE [dbo].[task](
 	[statusid] [tinyint] NOT NULL,
 	[priorityid] [tinyint] NOT NULL,
 	[linktaskid] [int] NOT NULL,
+	[projectid] [int] NOT NULL, 
 	[moduleid] [int] NOT NULL,
 	[storypoint] [int] NOT NULL,
 	[createdby] [int] NOT NULL,
@@ -230,7 +233,7 @@ GO
 
 DROP TABLE IF EXISTS taskpriority;
 CREATE TABLE [dbo].[taskpriority](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id] [tinyint] IDENTITY(1,1) NOT NULL,
 	[name] [varchar](50) NOT NULL,
 	[description] [varchar](100) NOT NULL,
 PRIMARY KEY CLUSTERED 
@@ -242,7 +245,7 @@ GO
 
 DROP TABLE IF EXISTS taskstatus;
 CREATE TABLE [dbo].[taskstatus](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id] [tinyint] IDENTITY(1,1) NOT NULL,
 	[name] [varchar](50) NOT NULL,
 	[description] [varchar](100) NOT NULL,
 PRIMARY KEY CLUSTERED 
@@ -254,7 +257,7 @@ GO
 
 DROP TABLE IF EXISTS tasktype;
 CREATE TABLE [dbo].[tasktype](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id] [tinyint] IDENTITY(1,1) NOT NULL,
 	[name] [varchar](50) NOT NULL,
 	[description] [varchar](100) NOT NULL,
 PRIMARY KEY CLUSTERED 
@@ -266,7 +269,7 @@ GO
 
 DROP TABLE IF EXISTS userroles;
 CREATE TABLE [dbo].[userroles](
-	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id] [tinyint] IDENTITY(1,1) NOT NULL,
 	[role] [varchar](50) NOT NULL,
 	[roledescription] [varchar](100) NULL,
 PRIMARY KEY CLUSTERED 
@@ -290,8 +293,6 @@ CREATE TABLE [dbo].[users](
 	[creationdate] [datetime] NOT NULL,
 	[modifiedby] [int] NOT NULL,
 	[modifieddate] [datetime] NOT NULL,
-	[projectid] [int] NOT NULL,
-	[moduleid] [int] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -311,6 +312,20 @@ CREATE TABLE [dbo].[version](
 	[creationdate] [datetime] NOT NULL,
 	[modifiedby] [int] NOT NULL,
 	[modifieddate] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+DROP TABLE IF EXISTS project_user;
+CREATE TABLE [dbo].[project_user](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[userid] [int] NOT NULL,
+	[projectid] [int] NOT NULL,
+	[moduleid] [int] NOT NULL,
+	[status] [tinyint] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
